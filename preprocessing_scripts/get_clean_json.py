@@ -1,7 +1,7 @@
 from ARQMathCode.post_reader_record import DataReaderRecord
 
 from datetime import datetime
-import bs4 as bs
+from utils import clean_body
 from collections import defaultdict
 import json
 
@@ -9,12 +9,6 @@ data_path = '../raw_data'
 out_dir = '../data_processing'
 reader = DataReaderRecord(data_path, version='1.2')
 answers = defaultdict(list)
-
-def clean_body(body):
-    soup = bs.BeautifulSoup(body, "lxml")
-    for math in soup.find_all('span', {'class': "math-container"}):
-        math.replace_with(f'${math.text}$')
-    return soup.text
 
 
 cleaned = []
