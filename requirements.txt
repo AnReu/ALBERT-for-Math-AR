@@ -1,0 +1,4 @@
+beautifulsoup4==4.9.3
+soupsieve==2.2.1
+xmlr @ git+https://github.com/hbldh/xmlr.git@a5fe128b4502b438f0f09f7727a392e29ad288a8
+tqdm~=4.62.2
