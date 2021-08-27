@@ -9,9 +9,7 @@ out_dir = 'models/task1/' + datetime.datetime.now().strftime("%y-%m-%d_%H:%M:%S:
 
 model_path = 'albert-base-v2'
 
-
-exit()
-tokenizer = AutoTokenizer.from_pretrained(model)
+tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 dataset = load_dataset('csv', data_files={'train': '../task1/training_files/arqmath_task1_train.csv',
                                           'dev': '../task1/training_files/arqmath_task1_dev.csv'})
