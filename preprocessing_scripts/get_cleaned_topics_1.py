@@ -2,7 +2,7 @@ from lxml import etree
 import json
 from utils import clean_body
 
-year = '2021'
+year = '2020'
 raw_data_path = '../raw_data'
 task1_path = '../task1'
 if year == '2020':

@@ -1,9 +1,10 @@
 import json
 from pathlib import Path
+import pandas as pd
 
 data_path = '../data_processing'
 task1_path = '../task1'
-year = '2021'
+year = '2020'
 
 topics_file_path = f'{task1_path}/topics_task1_{year}.json'
 tag_matching = 'one'  # possible values: one, all, none
@@ -39,11 +40,11 @@ tab_count = 0
 p_count = 0
 for topic in topics:
     id_a = topic['id']
-    out_path = f'{task1_path}/evaluation_files/{tag_matching}/{year}/{id_a.replace(" ", "_")}/MRPC/'
+    out_path = f'{task1_path}/evaluation_files/{tag_matching}/{year}/{id_a.replace(" ", "_")}/data/'
     Path(out_path).mkdir(parents=True, exist_ok=True)
     question = f"{topic['title']} {topic['question']}"
     tags = topic['tags'].split(',')
-    lines = ['label\tid_a\tid_b\ttext_a\ttext_b\n']  # first line contains header
+    lines = []  
     for q in cleaned_data:
         if 'answers' not in q or not matching_tags(tags, q['tags']):
             continue
@@ -59,8 +60,9 @@ for topic in topics:
                 question = question.replace('\t', ' ')
                 answer = answer.replace('\t', ' ')
                 print(topic)
-            lines.append(line_pattern.format(id_a=id_a, id_b=id_b, text_a=question, text_b=answer))
-    open(f'{out_path}/test.tsv', 'w', encoding='utf-8').writelines(lines)
+            lines.append((id_a, id_b, question, answer))
+    df = pd.DataFrame(lines, columns=['id_q', 'id_a', 'question', 'answer'])
+    df.to_csv(f'{out_path}/test.csv', index=False)
 print(nl_count)
 print(tab_count)
 print(p_count)
