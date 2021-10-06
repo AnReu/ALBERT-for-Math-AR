@@ -36,4 +36,4 @@ This will build the data needed for pre-training in both set ups (normal and sep
 3. Execute `preprocess_task1_eval.sh` to build the evaluation directory.
 
 ## Training
-[WIP]
+ Execute `finetune_task1.sh`, we use the fine-tuning parameters of our two publications. For adjustments edit `training/finetune.py`
