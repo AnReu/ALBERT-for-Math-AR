@@ -18,6 +18,16 @@ This will build the data needed for pre-training in both set ups (normal and sep
 ## Training
    [WIP]
 
+1. Execute:
+   ```
+   cd training
+   python3 get_hf_dataset.py albert_data_unprocessed albert_data_tokenized # generates SOP dataset from line-separated pretraining data
+   python3 pretrain.py # starts pretraining ALBERT   
+   ```
+Options: 
+* `get_hf_dataset.py <input dir> <output dir>`, both dirs should/will be located in `data_processing/` 
+* Edit `pretrain.py` to change pretraining hyperparameters
+* `pretrain.py use_comet` to log to comet_ml (needs to be installed)
 # Task 1
 ## Data Pre-Processing
 
