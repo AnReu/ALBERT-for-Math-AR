@@ -179,7 +179,7 @@ class LineByLineWithSOPTextDataset(Dataset):
         info_dict['file_dir'] = self.file_dir
         info_dict['block_size'] = self.block_size
         info_dict['short_seq_prob'] = self.short_seq_prob
-        info_dict['dataset_name'] + self.__name__
+        info_dict['dataset_name'] = 'LineByLineWithSOPTextDataset' 
         json.dump(info_dict, open(f'{dataset_path}/info.json', 'w'), indent=4, sort_keys=True)
 
         ids_tensor = []
@@ -222,5 +222,10 @@ class LineByLineWithSOPTextDataset(Dataset):
                 "sentence_order_label": sentence_order_label_tensor[i]
             }
             examples.append(example)
+        info_dict = json.load(open(f'{path}/info.json'))
+        self.tokenizer_path = info_dict['tokenizer_path']
+        self.file_dir = info_dict['file_dir']
+        self.block_size = info_dict['block_size']
+        self.short_seq_prob = info_dict['short_seq_prob']
 
         return examples
