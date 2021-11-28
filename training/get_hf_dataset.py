@@ -4,6 +4,8 @@ from os import makedirs
 import sys
 
 dataset = LineByLineWithSOPTextDataset
+untrained_model_path = '/scratch/ws/1/s8252120-polbert/Slurm-for-ALBERT_Math/ALBERT-for-Math-AR/untrained_models'
+model_path = f'{untrained_model_path}/tokenizer_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
 model_path = 'albert-base-v2'
 tokenizer = AlbertTokenizerFast.from_pretrained(model_path)
 
