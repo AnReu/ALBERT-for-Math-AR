@@ -1,3 +1,8 @@
+import sys
+use_comet = sys.argv[1] == 'use_comet' if len(sys.argv) > 1 else False
+if use_comet:
+    import comet_ml
+
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 from datasets import load_dataset
 import numpy as np
@@ -40,7 +45,8 @@ training_args = TrainingArguments("task1_trainer", evaluation_strategy="epoch",
                                   per_device_train_batch_size=32,
                                   per_device_eval_batch_size=32,
                                   learning_rate=2e-05,
-                                  disable_tqdm=True)
+                                  disable_tqdm=True,
+                                  num_train_epochs=3)
 
 trainer = Trainer(
     model=model, args=training_args, train_dataset=tokenized_dataset["train"], eval_dataset=tokenized_dataset["dev"], compute_metrics=compute_metrics
@@ -49,5 +55,16 @@ trainer = Trainer(
 
 trainer.train()
 trainer.evaluate()
+import sys
+use_comet = sys.argv[1] == 'use_comet' if len(sys.argv) > 1 else False
+if use_comet:
+    import comet_ml
+if use_comet:
+    experiment = comet_ml.config.get_global_experiment()
+    experiment.log_parameters({
+        'model_save_dir': out_dir,
+        'experiment_start': experiment_start
+    })
+    experiment.log_parameters(training_args.to_sanitized_dict(), prefix='train_args/')
 
 model.save_pretrained(out_dir, push_to_hub=False)
