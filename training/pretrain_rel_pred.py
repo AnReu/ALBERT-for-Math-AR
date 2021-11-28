@@ -18,7 +18,7 @@ from math_datasets import LineByLineWithFOPFormulaDataset
 data_dir = '../data_processing'
 tokenized_data_dir = f'{data_dir}/albert_data_latex_FOP_FormulaDataset_tokenized_with_latex'
 
-dataset = LineByLineWithSOPTextDataset
+dataset = LineByLineWithFOPFormulaDataset
 
 untrained_model_path = '/scratch/ws/1/s8252120-polbert/Slurm-for-ALBERT_Math/ALBERT-for-Math-AR/untrained_models'
 model_path = f'{untrained_model_path}/model_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
