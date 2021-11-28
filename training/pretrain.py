@@ -16,11 +16,16 @@ import json
 from math_datasets import LineByLineWithSOPTextDataset
 
 data_dir = '../data_processing'
-tokenized_data_dir = f'{data_dir}/albert_data_tokenized'
+tokenized_data_dir = f'{data_dir}/albert_data_tokenized_with_latex'
+tokenized_data_dir = f'{data_dir}/albert_data_without9k'
+#tokenized_data_dir = f'{data_dir}/albert_data_text_latex_separated_tokenized'
 
 dataset = LineByLineWithSOPTextDataset
 
-model_path = 'albert-base-v2'
+untrained_model_path = '/scratch/ws/1/s8252120-polbert/Slurm-for-ALBERT_Math/ALBERT-for-Math-AR/untrained_models'
+model_path = f'{untrained_model_path}/model_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
+model_path = f'albert-base-v2'# huggingface model path, e.g., 'albert-base-v2'
+from_scratch = False
 
 tokenizer_info = json.load(open(tokenized_data_dir+'/train/info.json'))
 tokenizer_path = tokenizer_info['tokenizer_path']
@@ -51,7 +56,7 @@ dataset_sop_eval = dataset(
     load_from_path=tokenized_data_dir+'/eval'
 )
 
-
+dataset_sop_eval.examples = dataset_sop_eval.examples[:500]
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer, mlm=True, mlm_probability=0.15
 )
@@ -59,36 +64,29 @@ data_collator = DataCollatorForLanguageModeling(
 training_args = TrainingArguments(
     output_dir=f"./trainer/pretrain_{experiment_start}",
     overwrite_output_dir=True,
-    num_train_epochs=1,
-    per_gpu_train_batch_size=2,
-    save_steps=10_000,
-    save_total_limit=2,
+    num_train_epochs=13,
+    per_gpu_train_batch_size=16,
+    per_device_eval_batch_size=2,
+    #save_steps=10_000,
+    save_total_limit=10,
+    save_strategy='epoch',
+    #save_strategy='steps',
+    #save_steps=10_000_0,
     prediction_loss_only=False,
     evaluation_strategy="epoch",
-    # eval_steps=50,
-    label_names=['labels', 'sentence_order_label']
+    #evaluation_strategy="steps",
+    #eval_steps=1_000,
+    eval_accumulation_steps=1,
+    label_names=['labels', 'sentence_order_label'],
+    load_best_model_at_end=True # according to eval_loss, if metric_for_best_model is not set
 )
 
-# ALBERT base config: https://tfhub.dev/google/albert_base/1
-config = AlbertConfig(attention_probs_dropout_prob=0.1,
-                      hidden_act='gelu',
-                      hidden_dropout_prob=0.1,
-                      embedding_size=128,
-                      hidden_size=768,
-                      initializer_range=0.02,
-                      intermediate_size=3072,
-                      max_position_embeddings=512,
-                      num_attention_heads=12,
-                      num_hidden_layers=12,
-                      num_hidden_groups=1,
-                      net_structure_type=0,
-                      gap_size=0,
-                      num_memory_blocks=0,
-                      inner_group_num=1,
-                      down_scale_factor=1,
-                      type_vocab_size=2,
-                      vocab_size=30000)
-model = AlbertForPreTraining(config)
+if from_scratch:
+	# ALBERT base config: https://tfhub.dev/google/albert_base/1
+	config = AlbertConfig.from_pretrained(model_path)
+	model = AlbertForPreTraining(config)
+else:
+	model = AlbertForPreTraining.from_pretrained(model_path)
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -110,6 +108,7 @@ if use_comet:
     })
     experiment.log_parameters(tokenizer_info, prefix='dataset/')
     experiment.log_parameters(training_args.to_sanitized_dict(), prefix='train_args/')
+    experiment.log_parameter('from_scratch', from_scratch)
 
 
 model.save_pretrained(out_dir, push_to_hub=False)
