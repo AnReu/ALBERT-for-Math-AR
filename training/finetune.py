@@ -9,8 +9,8 @@ import numpy as np
 from datasets import load_metric
 import datetime
 
-
-out_dir = 'models/task1/' + datetime.datetime.now().strftime("%y-%m-%d_%H:%M:%S:%f")
+experiment_start = datetime.datetime.now().strftime("%y-%m-%d_%H:%M:%S:%f")
+out_dir = 'models/task1/' + experiment_start
 
 model_path = 'albert-base-v2'
 
