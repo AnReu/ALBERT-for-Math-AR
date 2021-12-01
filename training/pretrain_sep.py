@@ -16,23 +16,21 @@ import json
 from math_datasets import LineByLineWithSOPTextDataset
 
 data_dir = '../data_processing'
-tokenized_data_dir = f'{data_dir}/albert_data_tokenized_with_latex'
-#tokenized_data_dir = f'{data_dir}/albert_data_without9k'
-#tokenized_data_dir = f'{data_dir}/albert_data_text_latex_separated_tokenized'
+tokenized_data_dir = f'{data_dir}/albert_data_text_latex_separated_tokenized'#_with_latex'
 
 dataset = LineByLineWithSOPTextDataset
 
 untrained_model_path = '/scratch/ws/1/s8252120-polbert/Slurm-for-ALBERT_Math/ALBERT-for-Math-AR/untrained_models'
 model_path = f'{untrained_model_path}/model_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
-model_path = f'albert-base-v2'# huggingface model path, e.g., 'albert-base-v2'
-model_path = 'trainer/pretrain_21-11-29_15:34:58:578878/checkpoint-281232'
+# model_path = f'albert-base-v2'# huggingface model path, e.g., 'albert-base-v2'
+model_path = 'models/pretrain/21-11-30_18:05:45:012236'
 from_scratch = False
 
 tokenizer_info = json.load(open(tokenized_data_dir+'/train/info.json'))
 tokenizer_path = tokenizer_info['tokenizer_path']
 
 experiment_start = datetime.datetime.now().strftime("%y-%m-%d_%H:%M:%S:%f")
-out_dir = 'models/pretrain/' + experiment_start
+out_dir = 'models/pretrain_sep/' + experiment_start
 print(out_dir)
 tokenizer = AlbertTokenizerFast.from_pretrained(tokenizer_path)
 metric = load_metric("accuracy")
@@ -65,7 +63,7 @@ data_collator = DataCollatorForLanguageModeling(
 training_args = TrainingArguments(
     output_dir=f"./trainer/pretrain_{experiment_start}",
     overwrite_output_dir=True,
-    num_train_epochs=13,
+    num_train_epochs=9,
     per_gpu_train_batch_size=16,
     per_device_eval_batch_size=2,
     #save_steps=10_000,

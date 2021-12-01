@@ -16,13 +16,13 @@ import json
 from math_datasets import LineByLineWithSOPTextDataset
 
 data_dir = '../data_processing'
-tokenized_data_dir = f'{data_dir}/albert_data_latex_FOP_tokenized_with_latex'
+tokenized_data_dir = f'{data_dir}/albert_data_latex_FOP_tokenized' #_with_latex'
 
 dataset = LineByLineWithSOPTextDataset
 
 untrained_model_path = '/scratch/ws/1/s8252120-polbert/Slurm-for-ALBERT_Math/ALBERT-for-Math-AR/untrained_models'
-model_path = f'{untrained_model_path}/model_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
-#model_path = f'albert-base-v2'# huggingface model path, e.g., 'albert-base-v2'
+#model_path = f'{untrained_model_path}/model_albert-base-v2_with_latex'# huggingface model path, e.g., 'albert-base-v2'
+model_path = f'albert-base-v2'# huggingface model path, e.g., 'albert-base-v2'
 from_scratch = False
 
 tokenizer_info = json.load(open(tokenized_data_dir+'/train/info.json'))
@@ -54,7 +54,7 @@ dataset_sop_eval = dataset(
     load_from_path=tokenized_data_dir+'/eval'
 )
 
-dataset_sop_eval.examples = dataset_sop_eval.examples[:500]
+dataset_sop_eval.examples = dataset_sop_eval.examples[:496]
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer, mlm=True, mlm_probability=0.15
 )
