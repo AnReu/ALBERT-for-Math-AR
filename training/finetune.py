@@ -13,8 +13,9 @@ experiment_start = datetime.datetime.now().strftime("%y-%m-%d_%H:%M:%S:%f")
 out_dir = 'models/task1/' + experiment_start
 
 model_path = 'albert-base-v2'
+tokenizer_path = 'albert-base-v2'
 
-tokenizer = AutoTokenizer.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 
 dataset = load_dataset('csv', data_files={'train': '../task1/training_files/arqmath_task1_train.csv',
                                           'dev': '../task1/training_files/arqmath_task1_dev.csv'})
