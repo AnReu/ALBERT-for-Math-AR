@@ -16,7 +16,7 @@ model_path = 'albert-base-v2'
 tokenizer_path = 'albert-base-v2'
 
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-
+print(tokenizer_path, model_path, out_dir)
 dataset = load_dataset('csv', data_files={'train': '../task1/training_files/arqmath_task1_train.csv',
                                           'dev': '../task1/training_files/arqmath_task1_dev.csv'})
 print('-- First training example --')
@@ -41,7 +41,7 @@ def compute_metrics(eval_pred):
 tokenized_dataset = dataset.map(tokenize, batched=True)
 model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=2)
 
-training_args = TrainingArguments("task1_trainer", evaluation_strategy="epoch",
+training_args = TrainingArguments("task1/trainer"+experiment_start, evaluation_strategy="epoch",
                                   warmup_steps=200,
                                   per_device_train_batch_size=32,
                                   per_device_eval_batch_size=32,
