@@ -60,9 +60,13 @@ Options:
  in the directory `preprocessing_scripts` if you want to build the evaluation directory for the 2020 topics
 3. Execute `preprocess_task1_eval.sh` to build the evaluation directory.
 
+This creates the data for fine-tuning on Task 1: a csv file with one column for the question, one for an answer and one for the label (0 = non relevant and 1 = relevant).
+For details on how we chose the non relevant answers, please refer to one of the papers.
 ## Training
- Execute `finetune_task1.sh`, we use the fine-tuning parameters of our two publications. For adjustments edit `training/finetune.py`
+Execute `finetune_task1.sh`, we use the fine-tuning parameters of our two publications. For adjustments like the model or data paths edit `training/finetune.py`. As for the pre-training logging with comet.ml is also available using the `use_comet` option. 
 
+
+The model gets the question-answer pairs created above as its input. Its objective is to classify whether the answer is relevant to the question or not. 
 ## Evaluation
 Once the model is fine-tuned, you can evaluate it on the ARQMath data. 
 1. Execute:
